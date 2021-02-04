@@ -20,21 +20,24 @@ NUM_RAM[$i]=$NEW_NUM
 
 echo "DOWNSTREAM for NODE $i [kbps]: "
 read NEW_NUM
-NUM_DWN[$i]=$NEW_NUM
-
+eval "NUM_DWN$i"=$NEW_NUM
 echo "DELAY for NODE $i [ms]: "
 read NEW_NUM
-NUM_DLY[$i]=$NEW_NUM
-
+eval "NUM_DLY$i"=$NEW_NUM
 ((i++))
 done
 
 i=1
 while [ $i -le $NUM_OF_NODES ]
 do
-echo "NUM OF CPUS for NODE $i: ${NUM_CPU[$i]} RAM for NODE $i: ${NUM_RAM[$i]} DS for NODE $i: ${NUM_DWN[$i]} DELAY CPUS for NODE $i: ${NUM_DLY[$i]}"
-export NUM_DWN[$i]=${NUM_DWN[$i]}
-export NUM_DLY[$i]=${NUM_DLY[$i]}
+echo "Node #$i:"
+echo "CPUS: ${NUM_CPU[$i]} RAM: ${NUM_RAM[$i]}"
+echo "DS: "
+eval "echo \${NUM_DWN$i}"
+echo "DELAY: "
+eval "echo \${NUM_DLY$i}"
+export NUM_DWN$i
+export NUM_DLY$i
 ((i++))
 done
 
@@ -77,7 +80,15 @@ typeset -i i
 while [ $i -le $NUM_OF_NODES ]
 do
 #for every client start ipfs
-docker run --cap-add=NET_ADMIN --cpus="${NUM_CPU[$i]}" -m ${NUM_RAM[$i]}m -e NUM_DWN[$i] -e NUM_DLY[$i] -e LIBP2P_FORCE_PNET -e CLUSTER_SECRET --name rc0p$i -dit c0p3
+eval "neua=\${NUM_DWN$i}"
+neua="${neua}kbit"
+
+eval "neub=\${NUM_DLY$i}"
+neub="${neub}ms"
+export neua
+export neub
+
+docker run --cap-add=NET_ADMIN --cpus="${NUM_CPU[$i]}" -m ${NUM_RAM[$i]}m -e i -e neua -e neub -e LIBP2P_FORCE_PNET -e CLUSTER_SECRET --name rc0p$i -dit c0p3
 eval "n$i="$(docker ps | awk 'NR==2{print $1}')""
 eval "now=\${n$i}"
 echo "ICH BIN DRAN: $now"
@@ -97,7 +108,7 @@ docker exec $now ipfs shutdown
 docker exec $now bash clusterinst.sh
 docker exec $now bash startIPFS.sh
 docker exec $now apk add iproute2
-docker exec $now tc qdisc add dev eth0 root tbf rate 100kbit burst 32kbit latency 1ms
+docker exec $now tc qdisc add dev eth0 root tbf rate $neua burst 32kbit latency $neub
 ((i++))
 done
 
@@ -115,26 +126,4 @@ echo "N$j: $now"
 done
 
 
-#1 wget https://dist.ipfs.io/ipfs-cluster-ctl/v0.13.1/ipfs-cluster-ctl_v0.13.1_linux-amd64.tar.gz
-#2 wget https://dist.ipfs.io/ipfs-cluster-service/v0.13.1/ipfs-cluster-service_v0.13.1_linux-amd64.tar.gz
-#3 tar -zxvf ipfs-cluster-ctl_v0.13.1_linux-amd64.tar.gz 
-#4 cp ipfs-cluster-ctl/ipfs-cluster-ctl /bin/
-#5 cp ipfs-cluster-service/ipfs-cluster-service /bin/
-#6 export IPFS_CLUSTER_PATH=/root/.ipfs-cluster/
-#7 ipfs-cluster-service init
-#8 get "secret": "" from /root/.ipfs-cluster/service.json (cat /root/.ipfs-cluster/service.json | grep "secret" | cut -d "\"" -f 4)
-#9 set secret at other nodes
-#9.5 tmux new -d
-#10 tmux send-keys -t1 "ipfs-cluster-service daemon" ENTER
-
-#alternative
-#1 GOPATH=/root/go
-#2 git clone https://github.com/ipfs/ipfs-cluster.git $GOPATH/src/github.com/ipfs/ipfs-cluster
-#3 cd $GOPATH/src/github.com/ipfs/ipfs-cluster
-#4 make install
-#5 
-
-#tbi
-# apk add iftop
-# apk add iproute2
 
