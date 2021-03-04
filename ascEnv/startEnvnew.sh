@@ -123,4 +123,3 @@ echo "N$j: $now"
 done
 
 #das ist ein neuer Test
-
