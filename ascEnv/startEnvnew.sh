@@ -41,9 +41,6 @@ export NUM_DLY$i
 ((i++))
 done
 
-
-
-
 export LIBP2P_FORCE_PNET=1
 export CLUSTER_SECRET=$(od -vN 32 -An -tx1 /dev/urandom | tr -d ' \n')
 echo "SECRET:$CLUSTER_SECRET"
