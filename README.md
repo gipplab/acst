@@ -16,7 +16,7 @@ This project is mainly about the creation of a Dockerfile and a script, with whi
 ## Installation and Start
 ### 0. Setup
 To start the test environment, Docker ([Get Docker](https://docs.docker.com/get-docker/ "Get Docker")) must first be installed.
-#### 1. Then this repository can be cloned:
+#### 1. Clone repository
 
         git clone "https://github.com/ag-gipp/acst.git"
 
@@ -38,11 +38,11 @@ To start the test environment, Docker ([Get Docker](https://docs.docker.com/get-
    *If you want to use a different image, be sure to change the image in `startEnvnew.sh` in the `docker run` lines (line 53 and 91)-*
 
 ### 1. Start
-#### 1. Now you can navigate to the file `startEnvnew.sh`:
+#### 1. Navigate to `startEnvnew.sh`:
 
         cd acst/ascEnv
 
-#### 2. To start the environment execute the following command:
+#### 2. Start the environment:
    
         ./startEnvnew.sh
 
