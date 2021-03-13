@@ -44,7 +44,7 @@ To start the test environment, Docker ([Get Docker](https://docs.docker.com/get-
 
 #### 2. Start the environment:
    
-        ./startEnvnew.sh
+        sudo ./startEnvnew.sh
 
 All required data should be contained in the subfolders, or should have been loaded by the Dockerfiles.
 
