@@ -15,7 +15,7 @@ This project is mainly about the creation of a Dockerfile and a script, with whi
 
 ## Installation and Start
 ### 0. Setup
-        To start the test environment, Docker ([Get Docker](https://docs.docker.com/get-docker/ "Get Docker")) must first be installed.
+To start the test environment, Docker ([Get Docker](https://docs.docker.com/get-docker/ "Get Docker")) must first be installed.
 #### 1. Then this repository can be cloned:
 
         git clone "https://github.com/ag-gipp/acst.git"
