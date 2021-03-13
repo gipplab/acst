@@ -1,15 +1,6 @@
 #  Blockchain 1: Academic Storage Cluster
 Seminar Selected Topics in Data & Knowledge Engineering WS 2020/2021 
 ***
-
-Aside from using this template, also check out the following sources for examples and guidelines on how to write a good `README.md` for your project. Note that the exemplary projects do not follow this template completely (either because they were created by third-parties or before we consolidated all the information into this template). They are still good examples of high-quality `README.md` files.
-* [Example: news-please](https://github.com/fhamborg/news-please/blob/master/README.md)
-* [Article: How to write a good readme](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
-* [Article: A beginners guide to writing a good readme](https://medium.com/@meakaakka/a-beginners-guide-to-writing-a-kickass-readme-7ac01da88ab3)
-
-Useful tools:
-* [Recordit: record your screen and save it to a GIF](http://recordit.co/)
----
 ## Academic Storage Cluster
 This project is about finding out the benefits and shortcomings of recent decentralized content addressable storage in the form of `IPFS` and if we can use it to store, retrieve and manage academic documents. For this purpose, data will made available inside a private cluster. Then other peers will try to read the data previously added.
 Instead of downloading the data from a specific server to my client, my peer asks other (nearby) peers for the information. In the same way, new data should not only be hosted by my peer, but also by others in the network, so the information should still be retrieved when my own peer is deactivated or lost the data.
@@ -18,11 +9,49 @@ Instead of downloading the data from a specific server to my client, my peer ask
 IPFS brings high availability while only requiring one comparatively lightweight peer on my side.With IPFS the data transport can be faster and therefore more energy-efficient than the conventional server-client way, assuming the information requested is available on a geographically closer peer and replication is cheaper than routing.
 
 ## Features
-What makes your project stand out? Include screenshots, code snippets, logos, etc.
+This project is mainly about the creation of a Dockerfile and a script, with which it is possible to start a test environment. In this environment, some parameters of the Docker containers were then changed so that network properties and hardware changes can be simulated. With a single command, the environment can be started. At runtime, the user is asked for parameters:
+
+    ./startEnv.sh
+
+## Installation and Start
+### 0. Setup
+        To start the test environment, Docker ([Get Docker](https://docs.docker.com/get-docker/ "Get Docker")) must first be installed.
+#### 1. Then this repository can be cloned:
+
+        git clone "https://github.com/ag-gipp/acst.git"
+
+#### 2. Build images
+        
+  In order for the script to launch all containers later, they must first be downloaded and installed. To do this, run the following Dockerfiles:
+   1. Build bootstrapnode / server with dockerfile:
+   
+            cd acst/ascEnv/webAppServer
+            sudo docker build --tag s0p3 .
+
+   2. Build clientnode with dockerfile:
+   
+            cd acst/ascEnv/neueDock
+            sudo docker build --tag c0p3 .
+
+ *This can take several minutes, because docker needs to download software at the first time.*
+
+   *If you want to use a different image, be sure to change the image in `startEnvnew.sh` in the `docker run` lines (line 53 and 91)-*
+
+### 1. Start
+#### 1. Now you can navigate to the file `startEnvnew.sh`:
+
+        cd acst/ascEnv
+
+#### 2. To start the environment execute the following command:
+   
+        ./startEnvnew.sh
+
+All required data should be contained in the subfolders, or should have been loaded by the Dockerfiles.
+
+#### 3. Now the number of peers (without bootstrap node) and the parameters of the peers are queried:
 
 
-## Installation
-myOwnInstall
+
 
 
 ## Inter Planetary File System (theoretical part)
@@ -62,46 +91,56 @@ Data can be *displayed, made available on the network* and on the user's own com
 |ipfs pin ls --type recursive \| cut -d' ' -f1 \| xargs -n1 ipfs pin rm|unpins all local data|
 |ipfs repo gc|garbage collection (delets unpinned items)|
 
-
-
-## Cluster
-When we use IPFS as a single node, we have to store all the data we need or want to make available. 
-We also share just one network connection, power grid etc. On the other hand, if we use multiple IPFS nodes as a storage cluster, we have many advantages: 
-When our cluster is busy, we do not have to upgrade the peers, we just add more peers to our cluster, so the load is distributed in the system (scalability).
-Also the availability is better, because the probability that the information is available is higher with a large number of peers than with just one. Additionally, the amount of stored data can be distributed across the peers.
-Private Cluster
-As default IPFS runs in a public mode, in which every peer can request data, and the first ones to serve it sends the data. Also, everyone can make data available from the own peer.
-Sometimes the data should not be distributed all over the world. In this scenario we want the data to be distributed only on some of our peers, so the test environment is consistent so we can change only one parameter and measure the impact of the change. But a private cluster cannot be used by other peers than the ones, we initialize. This means that the storage capacity and network connectivity of external peers cannot be used. 
-Bootstrap node
-The bootstrap node is an IPFS node that other nodes can connect to, in order to find other peers. 
+### Bootstrap node
+The bootstrap node is an IPFS node that other nodes can connect to, in order to **find other peers**. 
 For a private network, you cannot use the bootstrap nodes from the public IPFS network but use our private address instead. 
-PA is the bootstrap node, PB every other node, that wants to be in the network.
+*PA* is the bootstrap node, *PB* every other node, that wants to be in the network.
 To use our IPFS peers in private mode, we need to change the bootstrap addresses and tell the configuration, that we want to use a private network:
-PA+PB:
-ipfs init 				// initialize, if not already running
-ipfs bootstrap rm --all		// remove all (public) bootstrap address
-ipfs config show			// confirm that bootstrap is empty (Bootstrap: null)?
 
-PA:
-ipfs config show | grep "PeerID"	// copy id for PB
+Initialize IPFS and remove standard BSN on PA & PB:
 
-PB:
-ipfs bootstrap add /ip4/<ip address of bootnode>/tcp/4001/ipfs/<peer identity hash of bootnode>						// add address of PA to bootstrap
+    ipfs init 
+    ipfs bootstrap rm --all
+    ipfs config show
 
-PA+PB:
-export LIBP2P_FORCE_PNET=1		// enable private network
-ipfs daemon &				// restart
+Copy the ID from PA:
+
+    ipfs config show | grep "PeerID"
+
+Add bootstrap IP and ID to PB:
+
+    ipfs bootstrap add /ip4/<ip address of bootnode>/tcp/4001/ipfs/<peer identity hash of bootnode>
+
+Enable the private network on PA & PB:
+
+    export LIBP2P_FORCE_PNET=1
+    ipfs daemon &
 
 Testing:
 PA/PB:
-mkdir ipfstest
-cd ipfstest
-echo "Test" > file1
-ipfs add file1
+
+    mkdir ipfstest
+    cd ipfstest
+    echo "Test" > file1
+    ipfs add file1
 
 PB/PA:
-ipfs cat <hash>
 
+    ipfs cat <hash>
+
+## Cluster
+When we use IPFS as a single node, we have to store all the data we need or want to make available. 
+We also share just one network connection, power grid etc. 
+On the other hand, if we use multiple IPFS nodes as a storage cluster, we have many advantages: 
+* When our cluster is busy, we do not have to upgrade the peers, we just add more peers to our cluster, so the load is distributed in the system *(scalability)*.
+* The *availability* is better, because the probability that the information is available is higher with a large number of peers than with just one. 
+* Additionally, the amount of stored data can be *distributed* across the peers.
+
+### Private Cluster
+As default IPFS runs in a *public* mode, in which every peer can request data, and the first ones to serve it sends the data. Also, everyone can make data available from the own peer.
+Sometimes the data should *not be distributed* all over the world. 
+
+In this scenario we want the data to be distributed only on some of our peers, so the test environment is consistent so we can **change only one parameter and measure the impact of the change**. But a private cluster cannot be used by other peers than the ones we initialize. This means that the storage capacity and network connectivity of external peers cannot be used. 
 
 
 ## WebApp
