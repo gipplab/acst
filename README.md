@@ -91,10 +91,6 @@ If everything is finished, you get a table with information:
     docker exec -it <container_id> bash
 
 
-
-
-
-
 ## Inter Planetary File System (theoretical part)
 
 ### Overview / how it works
