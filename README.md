@@ -2,6 +2,12 @@
 Seminar Selected Topics in Data & Knowledge Engineering WS 2020/2021 
 ***
 ## ***🚧under construction🚧***
+### TODO
+* Add pictures
+* what are 
+  * deliverables
+  * code examples
+  * api references
 ***
 ## Academic Storage Cluster
 This project is about finding out the benefits and shortcomings of recent decentralized content addressable storage in the form of `IPFS` and if we can use it to store, retrieve and manage academic documents. For this purpose, data will made available inside a private cluster. Then other peers will try to read the data previously added.
@@ -15,6 +21,8 @@ This project was mainly about the creation of a Dockerfile and a script, with wh
 In this environment, some parameters of the Docker containers can be changed so that network properties and hardware changes can be simulated. With a single command, the environment can be started:
 
     ./startEnv.sh
+
+***
 
 ## Installation and Start
 ### 0. Setup
@@ -92,6 +100,46 @@ If everything is finished, you get a table with information:
 #### 4. Interact with containers
 
     docker exec -it <container_id> bash
+
+***
+
+## Docker
+### Intro
+One approach can be to use many computers with their own hardware, which are connected in a network. Unfortunately, this is **very expensive** and additionally very time counsuing to use, as each computer has to be set up and initialized individually. Therefore, it is a better idea to use some software that **runs on one real computer** and launches multiple IPFS instances at ones, like a virtual machine. This is where Docker comes into play.
+
+With Docker the host can run many instances of a lightweight OS with applications installed on the image. It is designed to be resource-efficient and installs only one instance of the required data for all containers.
+
+### Setup
+Docker is offered for many operating systems, including MacOs, Windows and many Linux distributions at Docker Hub[5]. 
+After a few attempts, however, Windows should be avoided, since the Windows subsystem for Linux (WSL) offered by Microsoft [6] still has some bugs and most docker images require this, because they are based on Linux to keep them easy to run in multiple instances. 
+One big problem was very high memory usage, which was not detected by docker itself (see Memory usage of docker with Linux-based containers under Windows 10), restricting the memory was also not fruitful. There are also general difficulties in compiling and running programs due to the non-existence of some data or functions in the WSL. Since than Ubuntu 20.04.1 [7] was used as the base operating system. 
+
+### Container 
+An image for running IPFS is already provided in the Docker Hub [8]. This is very small (in terms of memory requirements), but is very cumbersome to use, as there is no package manager or similar in the busybox by default. Therefore, a i created a separate Dockerfile, which is based on alpine and thus supports the apk packet manager.
+
+### Dockerfile
+As described earlier, Alpine is used as the base:
+
+    FROM alpine:latest
+Now the programs needed to compile IPFS can be downloaded and installed:
+
+	RUN apk update
+    RUN apk add gcc bash git binutils musl musl-dev libc6-compat make go
+    RUN export PATH=$PATH:/usr/local/go/bin
+    RUN export PATH=$PATH:$GOPATH/bin
+
+Now IPFS is copied from the Dockerfile folder to the container (or downloaded from the Internet):
+
+    COPY go-ipfs /go-ipfs	
+
+Finally IPFS can be compiled and "installed" with make and go:
+
+    WORKDIR /go-ipfs
+    RUN make -j 16 install
+    WORKDIR /go-ipfs/cmd/ipfs
+    RUN go build
+
+Now IPFS is installed and can be used.
 
 
 ## Inter Planetary File System (theoretical part)
@@ -182,19 +230,188 @@ Sometimes the data should *not be distributed* all over the world.
 
 In this scenario we want the data to be distributed only on some of our peers, so the test environment is consistent so we can **change only one parameter and measure the impact of the change**. But a private cluster cannot be used by other peers than the ones we initialize. This means that the storage capacity and network connectivity of external peers cannot be used. 
 
+***
 
 ## WebApp
 
-## API reference
-For small projects with a simple enough API, include the reference docs in this README. For medium-sized and larger projects, provide a link to the API reference docs.
 
-## Tests (optional: only if you have tests)
-Describe and show how to run the tests with code examples.
+### IPFS WEB APP UPLOAD
 
-## How to use and extend the project? (maybe)
-Include a step-by-step guide that enables others to use and extend your code for their projects. Whether this section is required and whether it should be part of the `README.md` or a separate file depends on your project. If the **very short** `Code Examples` from above comprehensively cover (despite being concise!) all the major functionality of your project already, this section can be omitted. **If you think that users/developers will need more information than the brief code examples above to fully understand your code, this section is mandatory.** If your project requires significant information on code reuse, place the information into a new `.md` file.
+A tool to easily "upload" files to IPFS
 
-## Results
+
+#### Setup
+
+In order to function correctly, IPFS needs to be installed and the daemon needs to be running.
+Node should be installed and used to serve the data as well.
+
+```
+ipfs daemon
+```
+
+
+#### Starting the server
+
+Make sure, that the IPFS API-Address is the right one.
+
+Navigate to the "IPFS-APP" folder and than start the server:
+```
+node ipfs.app
+```
+
+
+#### Upload
+
+Now open your browser and go to [http://127.0.0.1:3000/](http://127.0.0.1:3000/).
+There you can choose a file and than make it available in IPFS.
+
+
+#### View uploaded file
+
+After a successful upload you can read the file with
+    
+    ipfs cat <hash>
+
+
+### Backend
+Since no real server is used here, node and npm must be installed on the container responsible for the backend of the WebApp.	
+The actual app uses the ipfs-http-client [9] and the API interface of the IPFS client, which must run in the background. In addition, express [10] and express-fileupload [11] are used as the web framework and for uploading data.
+Functions
+First, the IPFS-client is given the API address, which must be known beforehand. 
+ipfs daemon
+
+The client returns much information including the IPFS API address (typically localhost on port 5001). This needs to be the same as in app.js:
+
+    const ipfs = new ipfsHttpClient({ host: 'localhost', port: '5001', protocol: 'http'});
+
+To deploy a file to IPFS, the file must first be uploaded to the server:
+
+    app.post('/upload', (req, res) => {
+        file.mv(filePath, async (err) =>{
+            const fileHash = await addFile(fileName, filePath);
+            …
+In the addFile function the file is then added to IPFS:
+
+    const addFile = async (fileName, filePath) => {
+        const file = fs.readFileSync(filePath);
+        const fileAdded = await ipfs.add({path: fileName, content: file});
+        var cid = fileAdded.cid.toString();
+        fileHash = cid;
+        return fileHash;
+    };
+If everything works a hash is returned which can be used to find the file on the IPFS network.
+The actual server listens on port 3000:
+
+    app.listen(3000, () => {
+       console.log('Server list. on 3000');
+    });
+
+
+### User Interface
+In the user interface we can choose a file and than add upload it to the server by pressing “Submit”.
+The server downloads the file (in our case in the corresponding docker container and makes it available to the IPFS network by using the IPFS-client API.
+
+***
+## Network restrictions
+
+trickle
+installation via apt:
+
+    apt-get install trickle
+
+execute:
+	
+    trickle -d <down> -u <up> <command> <down>, <up> in kB/s
+
+A test with a video download showed, that trickle is not suitable for this case. It did not restrict the IPFS download at all. Also on the docker containers there was an error:
+
+    ld.so: object '/usr/lib/trickle/trickle-overload.so' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+
+So a better program for our case was **tc**.
+### Traffic Control
+Other than trickle restricts tc **the whole system (container)**. This works better for our situation and is also more realistic, in case we ant to simulate a internet connection with less bandwidth or delays.
+
+#### Installation: 
+
+    apt-get install iproute
+
+#### Setup:
+Delay:
+
+	tc qdisc add dev <eth dev> root netem delay <delay>[ms]ms
+
+Show:
+
+	tc qdisc show dev <eth dev>
+
+Delete:
+
+	tc qdisc del dev <eth dev> root
+
+Packet loss:
+
+	tc qdisc add dev <eth dev> root netem loss <loss[%]>%
+
+Bandwidth:
+
+	tc qdisc add dev <eth dev> root tbf rate <bw>mbit burst <bwb>kbit latency <lat>ms
+	
+Example:
+
+	tc qdisc add dev eth0 root tbf rate 100kbit burst 32kbit latency 1ms
+
+
+Tests show that this also works with IPFS: 
+    
+    tc qdisc add dev eth0 root netem delay 100ms 
+
+... also resulted in a 100ms later arrival of the packages. So this tool is suitable for our case.
+
+
+
+
+### Measurement and Manipulation of Cluster
+#### Manipulation
+
+In addition to the network restrictions, other tools are used to manipulate and measure the performance of the cluster. On one hand, CPU performance and memory can be changed or limited using docker itself. The following commands are useful for this:
+
+    docker run …
+    • -m : set maximum memory
+    • --cpus=“<val>” 
+In the cluster itself, the number of peers and the replication value can be changed.
+
+#### Measurement
+
+**Replication**
+The replication (i.e. how many peers the data is actually available on) can be measured by using the command:
+
+    ipfs-cluster-ctl
+
+**Resources**
+
+Additionally, the size of the Docker containers, the CPU usage and the memory usage can be determined in Docker.
+
+**Network**
+The network is examined extensively. Above all, it is interesting to observe from which peer to which other peer the packets are sent, and what the size of these packets is. This is all done with the help of `wireshark`. 
+All docker containers can be examined in wireshark by filtering the IP address. Thus, the number and size of packets from one peer to another can be measured. 
+
+***
+## Evaluation
+### Methodology
+In order to find out whether IPFS and cluster are usable for the purposes of the academic storage cluster, effects on the system are measured using the previously mentioned tools. As is common for a storage system for academic data, a PDF file is taken as a reference for academic files. The size of our test file is 6.93 MB. 
+
+This file is first made available by a peer in IPFS (ipfs add test.pdf). Then, this file is pinned throughout the cluster (ipfs-cluster-ctl pin add <hash>). The pinning status is then monitored and only proceeded when on all cluster peers it has been replicated. Then on a specific peer (which however changes) the file is deleted and then also the inexistence of the file is confirmed. 
+
+Finally, an ipfs get is executed from the peer where the file was deleted.
+
+In each case, the durations, quantities of packets, network and CPU/RAM restrictions and peculiarities are documented.
+
+This method has some advantages and disadvantages. On one hand, slow networks can be simulated by reducing bandwidth and artificially increasing response times. In addition, slow peers can be simulated by allocating fewer resources to a particular peer. Thanks to the Docker environment, changes can also be made to the system rather quickly and data investigation with Docker in conjunction with Wireshark only needs to be performed on one host.
+
+On the other hand, it is still only a simulation since the whole system is based on just one real network with just one real computer.
+
+
+### Results
 By analyzing the data from `wireshark`, it can be observed that in fact the data for the one file is obtained from multiple peers. 
 Bandwidth limitation 
 IPFS works up from a bandwidth of about **100 Kbps** below that, it becomes difficult to communicate with the network. The *more bandwidth available to a peer, the more likely that peer is to provide data* in priority to the others. This results in a larger number of large packets at the end of the download. 
@@ -214,22 +431,51 @@ Overall
 In all tests, peer 0 was the bootstrap node and thus had to work the most. The peers 1 to 4 were further restricted with increasing number. This can also be seen in Figure 8. Since peer 4 was not used in some tests, the participation of this peer is slightly different from the expected trend.
 
 
-## Conclusion
+### Conclusion
 Working with IPFS and therefore a peer-to-peer network was interesting and relatively easy to setup. With just a few minutes of work, you can be part of a very powerful network for sharing data. However, there is much more to discover at IPFS than initially expected. The possibilities with a cluster for example are much greater than with a conventional server-client system, because the peers in the cluster can help each other out.
 The real problem of the work is not IPFS itself, but the environment in which IPFS, or the cluster, operates. Thus, a changeable environment was created with as few uncertainties as possible to obtain consistent measurement data. 
-For this purpose, docker was used. A program that can run many instances of IPFS in a very resource-efficient way but is not very intuitive with Dockerfiles and thus must be used with a unique language to manage the actual images and installation. Especially the large number of possibilities through different base images can consume a lot of time. For example, package managers do not contain the same programs in every version and can only be updated a little. So choosing the right base image was very important but time consuming.
+For this purpose, docker was used. A program that can run many instances of IPFS in a very resource-efficient way but is not very intuitive to use with Dockerfiles and thus needs to be used with a unique language to manage the actual images and installation. Especially the possibilities through choosing one of many different base images can consume a lot of time. For example, package managers do not provide the same programs in every version and can only be updated a little. So choosing the right base image was very important but time consuming.
 Therefore, many scripts were developed with which it is possible to start docker, the container for the server with IPFS peer and the additional IPFS peer, which together form a mini cluster, by just executing one line of command. Also all changeable parameters will be set while the script is running. This saves much time searching for the right image and manipulating the system after every restart of the system.
+
 As expected, the bandwidth limitation had a negative impact on download speed, and the CPU limitation had very little to no impact, as IPFS works relatively light weight. In contrast, it was surprising to see that the simulated long response time had little effect on the choice of peers to provide. 
+
+
 In the future, based on the results, a cluster can be set up in the real world at physically different locations and connected to each other. In this way, it can be tested whether the new results match those from the simulated environment. In addition, multiple files can be used to investigate the impact of replication on storage space.
+
+***
+
+## Sources and references
+
+[1]	J. Benet, “IPFS - Content Addressed, Versioned, P2P File System,” arXiv:1407.3561 [cs], Jul. 2014, Accessed: Dec. 01, 2020. [Online]. Available: http://arxiv.org/abs/1407.3561.
+
+[2]	J. Kan and K. S. Kim, “MTFS: Merkle-Tree-Based File System,” arXiv:1902.09100 [cs], Apr. 2019, Accessed: Dec. 01, 2020. [Online]. Available: http://arxiv.org/abs/1902.09100.
+
+[3]	ipfs-shipyard/ipfs-desktop. IPFS Shipyard, 2021.
+
+[4]	S. Walker, “KeySpace: End-to-End Encryption using Ethereum and IPFS,” Medium, Dec. 19, 2018. https://medium.com/fluidity/keyspace-end-to-end-encryption-using-ethereum-and-ipfs-87b04b18156b (accessed Mar. 12, 2021).
+
+[5]	“Explore - Docker Hub.” https://hub.docker.com/search?q=&type=edition&offering=community (accessed Jan. 22, 2021).
+
+[6]	craigloewen-msft, “An overview on the Windows Subsystem for Linux.” https://docs.microsoft.com/en-us/windows/wsl/ (accessed Jan. 22, 2021).
+
+[7]	“FocalFossa/ReleaseNotes/ChangeSummary/20.04.1 - Ubuntu Wiki.” https://wiki.ubuntu.com/FocalFossa/ReleaseNotes/ChangeSummary/20.04.1 (accessed Jan. 21, 2021).
+
+[8]	“ipfs/go-ipfs - Docker Hub.” https://hub.docker.com/r/ipfs/go-ipfs (accessed Jan. 22, 2021).
+
+[9]	“ipfs-http-client,” npm. https://www.npmjs.com/package/ipfs-http-client (accessed Jan. 21, 2021).
+
+[10] expressjs/express. expressjs, 2021.
+
+[11] R. Girges, richardgirges/express-fileupload. 2021.
+
+
 
 ## License
 
 Copyright 2021 Alexander von Tottleben
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
+You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions andlimitations under the License.
