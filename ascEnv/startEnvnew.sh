@@ -105,7 +105,10 @@ docker exec $now ipfs shutdown
 docker exec $now bash clusterinst.sh
 docker exec $now bash startIPFS.sh
 docker exec $now apk add iproute2
-docker exec $now tc qdisc add dev eth0 root tbf rate $neua burst 32kbit latency $neub
+docker exec $now tc qdisc add dev eth0 root handle 1: netem delay $neub
+docker exec $now tc qdisc add dev eth0 parent 1: handle 2: tbf rate $neua burst 32kbit latency $neub
+
+
 ((i++))
 done
 
