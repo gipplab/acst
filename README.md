@@ -1,7 +1,7 @@
 #  Blockchain 1: Academic Storage Cluster
 Seminar Selected Topics in Data & Knowledge Engineering WS 2020/2021 
 ***
-## ***under construction***
+## ***🚧under construction🚧***
 ***
 ## Academic Storage Cluster
 This project is about finding out the benefits and shortcomings of recent decentralized content addressable storage in the form of `IPFS` and if we can use it to store, retrieve and manage academic documents. For this purpose, data will made available inside a private cluster. Then other peers will try to read the data previously added.
