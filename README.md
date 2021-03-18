@@ -50,6 +50,47 @@ All required data should be contained in the subfolders, or should have been loa
 
 #### 3. Now the number of peers (without bootstrap node) and the parameters of the peers are queried:
 
+    NUM OF NODES (min 1 max 100): 
+    2
+    NUM OF CPUS for NODE 1 (min 0.1 max 16): 
+    1
+    RAM for NODE 1 [MB, min=4]: 
+    200
+    DOWNSTREAM for NODE 1 [kbps]: 
+    10000              
+    DELAY for NODE 1 [ms]: 
+    1
+    NUM OF CPUS for NODE 2 (min 0.1 max 16): 
+    1
+    RAM for NODE 2 [MB, min=4]: 
+    200
+    DOWNSTREAM for NODE 2 [kbps]: 
+    100
+    DELAY for NODE 2 [ms]: 
+    10
+    Node #1:
+    CPUS: 1 RAM: 200
+    DS: 
+    10000
+    DELAY: 
+    1
+    Node #2:
+    CPUS: 1 RAM: 200
+    DS: 
+    100
+    DELAY: 
+    10
+
+If everything is finished, you get a table with information:
+BSN: 3d941c1d45fb ID: 12D3KooWSzkpmdEsaTJjAjZs4u1wMMpNF8RUrx9L4DzdBYgRnSi8 BSNIP: 172.17.0.2
+N1: ff1b61312a1b
+N2: dd5ba61f2c11
+
+#### 4. Interact with containers
+
+    docker exec -it <container_id> bash
+
+
 
 
 
