@@ -1,85 +1,88 @@
 #  Blockchain 1: Academic Storage Cluster
 Seminar Selected Topics in Data & Knowledge Engineering WS 2020/2021 
 ***
+## ***under construction***
+***
 ## Academic Storage Cluster
 This project is about finding out the benefits and shortcomings of recent decentralized content addressable storage in the form of `IPFS` and if we can use it to store, retrieve and manage academic documents. For this purpose, data will made available inside a private cluster. Then other peers will try to read the data previously added.
 Instead of downloading the data from a specific server to my client, my peer asks other (nearby) peers for the information. In the same way, new data should not only be hosted by my peer, but also by others in the network, so the information should still be retrieved when my own peer is deactivated or lost the data.
 
 ## Motivation
-IPFS brings high availability while only requiring one comparatively lightweight peer on my side.With IPFS the data transport can be faster and therefore more energy-efficient than the conventional server-client way, assuming the information requested is available on a geographically closer peer and replication is cheaper than routing.
+IPFS brings high availability while only requiring one comparatively lightweight peer on my side. With IPFS the data transport can be faster and therefore more energy-efficient than via the conventional server-client way, assuming the information requested is available on a geographically closer peer and replication is cheaper than routing.
 
 ## Features
-This project is mainly about the creation of a Dockerfile and a script, with which it is possible to start a test environment. In this environment, some parameters of the Docker containers were then changed so that network properties and hardware changes can be simulated. With a single command, the environment can be started. At runtime, the user is asked for parameters:
+This project was mainly about the creation of a Dockerfile and a script, with which it is possible to start a test environment. 
+In this environment, some parameters of the Docker containers can be changed so that network properties and hardware changes can be simulated. With a single command, the environment can be started:
 
     ./startEnv.sh
 
 ## Installation and Start
 ### 0. Setup
-To start the test environment, Docker ([Get Docker](https://docs.docker.com/get-docker/ "Get Docker")) must first be installed.
+To start the test environment, Docker ([Get Docker](https://docs.docker.com/get-docker/ "Get Docker")) needs to be installed first.
 #### 1. Clone repository
 
-        git clone "https://github.com/ag-gipp/acst.git"
+    git clone "https://github.com/ag-gipp/acst.git"
 
 #### 2. Build images
         
   In order for the script to launch all containers later, they must first be downloaded and installed. To do this, run the following Dockerfiles:
    1. Build bootstrapnode / server with dockerfile:
    
-            cd acst/ascEnv/webAppServer
-            sudo docker build --tag s0p3 .
+    cd acst/ascEnv/webAppServer
+    sudo docker build --tag s0p3 .
 
    2. Build clientnode with dockerfile:
    
-            cd acst/ascEnv/neueDock
-            sudo docker build --tag c0p3 .
+    cd acst/ascEnv/neueDock
+    sudo docker build --tag c0p3 .
 
  *This can take several minutes, because docker needs to download software at the first time.*
 
-   *If you want to use a different image, be sure to change the image in `startEnvnew.sh` in the `docker run` lines (line 53 and 91)-*
+   *If you want to use a different image, be sure to change the image in `startEnvnew.sh` in the `docker run` lines (line 53 and 91).*
 
 ### 1. Start
 #### 1. Navigate to `startEnvnew.sh`:
 
-        cd acst/ascEnv
+    cd acst/ascEnv
 
 #### 2. Start the environment:
    
-        sudo ./startEnvnew.sh
+    sudo ./startEnvnew.sh
 
-All required data should be contained in the subfolders, or should have been loaded by the Dockerfiles.
+All required data should be contained in the subfolders, and should have been loaded by the Dockerfiles.
 
 #### 3. Now the number of peers (without bootstrap node) and the parameters of the peers are queried:
 
-    NUM OF NODES (min 1 max 100): 
-    2
-    NUM OF CPUS for NODE 1 (min 0.1 max 16): 
-    1
-    RAM for NODE 1 [MB, min=4]: 
-    200
-    DOWNSTREAM for NODE 1 [kbps]: 
-    10000              
-    DELAY for NODE 1 [ms]: 
-    1
-    NUM OF CPUS for NODE 2 (min 0.1 max 16): 
-    1
-    RAM for NODE 2 [MB, min=4]: 
-    200
-    DOWNSTREAM for NODE 2 [kbps]: 
-    100
-    DELAY for NODE 2 [ms]: 
-    10
-    Node #1:
-    CPUS: 1 RAM: 200
-    DS: 
-    10000
-    DELAY: 
-    1
-    Node #2:
-    CPUS: 1 RAM: 200
-    DS: 
-    100
-    DELAY: 
-    10
+        NUM OF NODES (min 1 max 100): 
+        2
+        NUM OF CPUS for NODE 1 (min 0.1 max 16): 
+        1
+        RAM for NODE 1 [MB, min=4]: 
+        200
+        DOWNSTREAM for NODE 1 [kbps]: 
+        10000              
+        DELAY for NODE 1 [ms]: 
+        1
+        NUM OF CPUS for NODE 2 (min 0.1 max 16): 
+        1
+        RAM for NODE 2 [MB, min=4]: 
+        200
+        DOWNSTREAM for NODE 2 [kbps]: 
+        100
+        DELAY for NODE 2 [ms]: 
+        10
+        Node #1:
+        CPUS: 1 RAM: 200
+        DS: 
+        10000
+        DELAY: 
+        1
+        Node #2:
+        CPUS: 1 RAM: 200
+        DS: 
+        100
+        DELAY: 
+        10
 
 If everything is finished, you get a table with information:
     BSN: 3d941c1d45fb ID: 12D3KooWSzkpmdEsaTJjAjZs4u1wMMpNF8RUrx9L4DzdBYgRnSi8 BSNIP: 172.17.0.2
