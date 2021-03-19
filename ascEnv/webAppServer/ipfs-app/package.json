@@ -1,0 +1,19 @@
+{
+  "name": "ipfs-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ja",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "alex",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "ipfs-http-client": "^48.2.1"
+  }
+}
+
