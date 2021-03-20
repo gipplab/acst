@@ -5,10 +5,6 @@ Seminar Selected Topics in Data & Knowledge Engineering WS 2020/2021
 ### TODO
 * Add pictures
 * Wireshark section
-* api ref
-* Dokumentation in 
-  * Dockerfile
-  * Startscript
 ***
 ## Academic Storage Cluster
 This project is about finding out the benefits and shortcomings of recent decentralized content addressable storage in the form of `IPFS` and if we can use it to store, retrieve and manage academic documents. For this purpose, data will made available inside a private cluster. Then other peers will try to read the data previously added.
@@ -448,11 +444,13 @@ In the future, based on the results, a cluster can be set up in the real world a
 
 ## Sources and references
 
+### General resources
+
 [1]	J. Benet, “IPFS - Content Addressed, Versioned, P2P File System,” arXiv:1407.3561 [cs], Jul. 2014, Accessed: Dec. 01, 2020. [Online]. Available: http://arxiv.org/abs/1407.3561.
 
 [2]	J. Kan and K. S. Kim, “MTFS: Merkle-Tree-Based File System,” arXiv:1902.09100 [cs], Apr. 2019, Accessed: Dec. 01, 2020. [Online]. Available: http://arxiv.org/abs/1902.09100.
 
-[3]	ipfs-shipyard/ipfs-desktop. IPFS Shipyard, 2021.
+[3]	ipfs-shipyard/ipfs-desktop. IPFS Shipyard, 2021.: https://github.com/ipfs-shipyard/ipfs-desktop 
 
 [4]	S. Walker, “KeySpace: End-to-End Encryption using Ethereum and IPFS,” Medium, Dec. 19, 2018. https://medium.com/fluidity/keyspace-end-to-end-encryption-using-ethereum-and-ipfs-87b04b18156b (accessed Mar. 12, 2021).
 
@@ -466,11 +464,19 @@ In the future, based on the results, a cluster can be set up in the real world a
 
 [9]	“ipfs-http-client,” npm. https://www.npmjs.com/package/ipfs-http-client (accessed Jan. 21, 2021).
 
-[10] expressjs/express. expressjs, 2021.
+[10] expressjs/express. expressjs, 2021.: https://expressjs.com/ 
 
-[11] R. Girges, richardgirges/express-fileupload. 2021.
+[11] R. Girges, richardgirges/express-fileupload. 2021.: https://github.com/richardgirges/express-fileupload
 
+### API and library references
 
+ipfs-http-api by Protocol Labs, Inc.: https://github.com/ipfs/http-api-docs 
+
+js-ipfs by Alex Potsides et. al.: https://github.com/ipfs/js-ipfs 
+
+express by StrongLoop, IBM et. al.: https://expressjs.com/ 
+
+express-fileupload by R. Girges: https://github.com/richardgirges/express-fileupload 
 
 ## License
 
