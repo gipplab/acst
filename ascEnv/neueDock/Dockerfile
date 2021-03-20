@@ -1,5 +1,7 @@
+# alpine is used because of its package managing system
 FROM alpine:latest
 
+# some infos for debug
 RUN uname -a
 RUN ifconfig
 RUN apk update
@@ -22,10 +24,12 @@ RUN export PATH=$PATH:/usr/local/go/bin
 RUN export PATH=$PATH:$GOPATH/bin
 RUN go version
 
+# copy ipfs and server stuff
 COPY go-ipfs /go-ipfs
 COPY startIPFS.sh /
 RUN ls
 
+# compile and build IPFS
 WORKDIR /go-ipfs
 RUN make -j 16 install
 WORKDIR /go-ipfs/cmd/ipfs
@@ -34,6 +38,9 @@ RUN go build
 # copy ipfs bin to path
 RUN cp ipfs $GOPATH/bin
 
+# initialize IPFS
 RUN ipfs init
 WORKDIR /
+
+# start IPFS daemon
 RUN bash startIPFS.sh
