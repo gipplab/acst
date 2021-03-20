@@ -235,7 +235,7 @@ In this scenario we want the data to be distributed only on some of our peers, s
 
 ## WebApp
 
-
+The service of this prototype uses the ipfs-http-client API/library, which was developed by Alan Shaw et. al.
 ### IPFS WEB APP UPLOAD
 
 A tool to easily "upload" files to IPFS
