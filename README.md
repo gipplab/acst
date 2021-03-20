@@ -4,18 +4,19 @@ Seminar Selected Topics in Data & Knowledge Engineering WS 2020/2021
 ## ***🚧under construction🚧***
 ### TODO
 * Add pictures
-* Wireshark section
 ***
 ## Academic Storage Cluster
 This project is about finding out the benefits and shortcomings of recent decentralized content addressable storage in the form of `IPFS` and if we can use it to store, retrieve and manage academic documents. For this purpose, data will made available inside a private cluster. Then other peers will try to read the data previously added.
 Instead of downloading the data from a specific server to my client, my peer asks other (nearby) peers for the information. In the same way, new data should not only be hosted by my peer, but also by others in the network, so the information should still be retrieved when my own peer is deactivated or lost the data.
+
+[IMAGE]
 
 ## Motivation
 IPFS brings high availability while only requiring one comparatively lightweight peer on my side. With IPFS the data transport can be faster and therefore more energy-efficient than via the conventional server-client way, assuming the information requested is available on a geographically closer peer and replication is cheaper than routing.
 
 ## Features
 This project was mainly about the creation of a Dockerfile and a script, with which it is possible to start a test environment. 
-In this environment, some parameters of the Docker containers can be changed so that network properties and hardware changes can be simulated. With a single command, the environment can be started:
+In this environment, some parameters of the Docker containers can be changed so that network properties and hardware changes can be simulated. With a single command, the environment can be started (as superuser):
 
     ./startEnv.sh
 
@@ -43,7 +44,7 @@ To start the test environment, Docker ([Get Docker](https://docs.docker.com/get-
 
  *This can take several minutes, because docker needs to download software at the first time.*
 
-   *If you want to use a different image, be sure to change the image in `startEnvnew.sh` in the `docker run` lines (line 53 and 91).*
+   *If you want to use a different image, be sure to change the image in `startEnvnew.sh` in the `docker run` lines (line 63 and 114).*
 
 ### 1. Start
 #### 1. Navigate to `startEnvnew.sh`:
@@ -89,7 +90,7 @@ All required data should be contained in the subfolders, and should have been lo
         DELAY: 
         10
 
-If everything is finished, you get a table with information:
+If everything is finished, you get a table with information like this:
 
     BSN: 3d941c1d45fb ID: 12D3KooWSzkpmdEsaTJjAjZs4u1wMMpNF8RUrx9L4DzdBYgRnSi8 BSNIP: 172.17.0.2
     N1: ff1b61312a1b
@@ -222,6 +223,9 @@ On the other hand, if we use multiple IPFS nodes as a storage cluster, we have m
 * The *availability* is better, because the probability that the information is available is higher with a large number of peers than with just one. 
 * Additionally, the amount of stored data can be *distributed* across the peers.
 
+
+[IMAGE]
+
 ### Private Cluster
 As default IPFS runs in a *public* mode, in which every peer can request data, and the first ones to serve it sends the data. Also, everyone can make data available from the own peer.
 Sometimes the data should *not be distributed* all over the world. 
@@ -311,21 +315,7 @@ The server downloads the file (in our case in the corresponding docker container
 
 ***
 ## Network restrictions
-
-trickle
-installation via apt:
-
-    apt-get install trickle
-
-execute:
-	
-    trickle -d <down> -u <up> <command> <down>, <up> in kB/s
-
-A test with a video download showed, that trickle is not suitable for this case. It did not restrict the IPFS download at all. Also on the docker containers there was an error:
-
-    ld.so: object '/usr/lib/trickle/trickle-overload.so' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
-
-So a better program for our case was **tc**.
+A good program for our case was **tc**.
 ### Traffic Control
 Other than trickle restricts tc **the whole system (container)**. This works better for our situation and is also more realistic, in case we ant to simulate a internet connection with less bandwidth or delays.
 
@@ -366,8 +356,6 @@ Tests show that this also works with IPFS:
 ... also resulted in a 100ms later arrival of the packages. So this tool is suitable for our case.
 
 
-
-
 ### Measurement and Manipulation of Cluster
 #### Manipulation
 
@@ -394,6 +382,7 @@ The network is examined extensively. Above all, it is interesting to observe fro
 All docker containers can be examined in wireshark by filtering the IP address. Thus, the number and size of packets from one peer to another can be measured. 
 
 ***
+
 ## Evaluation
 ### Methodology
 In order to find out whether IPFS and cluster are usable for the purposes of the academic storage cluster, effects on the system are measured using the previously mentioned tools. As is common for a storage system for academic data, a PDF file is taken as a reference for academic files. The size of our test file is 6.93 MB. 
@@ -408,6 +397,21 @@ This method has some advantages and disadvantages. On one hand, slow networks ca
 
 On the other hand, it is still only a simulation since the whole system is based on just one real network with just one real computer.
 
+### Wireshark
+When data has been added to the cluster, the data exchange can be inspected with Wireshark. To do this, start Wireshark:
+
+[IMAGE]
+
+and select docker (docker0) to see all containers. 
+Then you can filter for a specific container (e.g. the one that executes a "get"). To get only IPFS relevant, it can be advantageous to filter only by port 4001 (example):
+
+    ip.addr == 172.17.0.2 && tcp.port eq 4001
+
+
+[IMAGE]
+
+Now you can filter even further or sort e.g. by length of the packages. At the bottom right you can also read the number of packages displayed.
+
 
 ### Results
 By analyzing the data from `wireshark`, it can be observed that in fact the data for the one file is obtained from multiple peers. 
@@ -417,10 +421,14 @@ From a bandwidth of about **1000 KBit/s on, this effect is no longer noticeable*
 During a few test runs with very low bandwidth (approx. 100 Kbit/s), I noticed that this peer slows down the entire network. After deactivating this peer, the download speed became faster again.
 For a well running system it is therefore advantageous to connect all peers with at least 1000 kbps.
 
+[IMAGE]
+
 Different tests show that using varying delays in the connection to simulate a slow response time has no effect on the peers used for data provisioning. Thus, the *peer with a high simulated ping was selected to provide data in a ***similar way*** as a peer with a low response time*. Measured were orders of magnitude 10 to 50 ms and 10 to 2000 ms. In the **extreme test**, on average, the peer with 10 ms delay was used for 7% of the packets, the one with 100 ms delay for 48%, the one with 1 s delay for 12.5% and the one with 2 s delay for 32.5%. Above this, a response time is unrealistic in today's world. 
 In a more **realistic test**, the peer with 10 ms delay was used for 25%, the peer with 20 ms delay was used for 30%, the peer with 30 ms delay was used for 20%, and the peer with the largest delay in the test (50 ms) was used for 23% of the packets. 
 In all tests the download speed was not very much affected by the delay (as seen in Figure 6).
 The combined results of the eight runs show that the response time of the peers (in normal orders of magnitude) does not have a negative impact on cluster utilization for common PDF file sizes.
+
+[IMAGE]
 
 Limitation in CPU and RAM
 Limiting the CPU (down to 0.1 CPUs, which corresponds to about 2 GFLOPS) did not lead to any measurable difference and was therefore not changed further in the network tests.
