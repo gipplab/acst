@@ -224,7 +224,7 @@ On the other hand, if we use multiple IPFS nodes as a storage cluster, we have m
 * Additionally, the amount of stored data can be *distributed* across the peers.
 
 
-[IMAGE]
+![Image of Cluster](https://github.com/ag-gipp/acst/blob/main/graphics/cluster.png?raw=true)
 
 ### Private Cluster
 As default IPFS runs in a *public* mode, in which every peer can request data, and the first ones to serve it sends the data. Also, everyone can make data available from the own peer.
@@ -400,7 +400,7 @@ On the other hand, it is still only a simulation since the whole system is based
 ### Wireshark
 When data has been added to the cluster, the data exchange can be inspected with Wireshark. To do this, start Wireshark:
 
-[IMAGE]
+![Overview of wireshark]()
 
 and select docker (docker0) to see all containers. 
 Then you can filter for a specific container (e.g. the one that executes a "get"). To get only IPFS relevant, it can be advantageous to filter only by port 4001 (example):
@@ -408,7 +408,7 @@ Then you can filter for a specific container (e.g. the one that executes a "get"
     ip.addr == 172.17.0.2 && tcp.port eq 4001
 
 
-[IMAGE]
+![Data of wireshark]()
 
 Now you can filter even further or sort e.g. by length of the packages. At the bottom right you can also read the number of packages displayed.
 
@@ -421,14 +421,14 @@ From a bandwidth of about **1000 KBit/s on, this effect is no longer noticeable*
 During a few test runs with very low bandwidth (approx. 100 Kbit/s), I noticed that this peer slows down the entire network. After deactivating this peer, the download speed became faster again.
 For a well running system it is therefore advantageous to connect all peers with at least 1000 kbps.
 
-[IMAGE]
+![Network speed restriction result](https://github.com/ag-gipp/acst/blob/main/graphics/speed_restric.png?raw=true)
 
 Different tests show that using varying delays in the connection to simulate a slow response time has no effect on the peers used for data provisioning. Thus, the *peer with a high simulated ping was selected to provide data in a ***similar way*** as a peer with a low response time*. Measured were orders of magnitude 10 to 50 ms and 10 to 2000 ms. In the **extreme test**, on average, the peer with 10 ms delay was used for 7% of the packets, the one with 100 ms delay for 48%, the one with 1 s delay for 12.5% and the one with 2 s delay for 32.5%. Above this, a response time is unrealistic in today's world. 
 In a more **realistic test**, the peer with 10 ms delay was used for 25%, the peer with 20 ms delay was used for 30%, the peer with 30 ms delay was used for 20%, and the peer with the largest delay in the test (50 ms) was used for 23% of the packets. 
 In all tests the download speed was not very much affected by the delay (as seen in Figure 6).
 The combined results of the eight runs show that the response time of the peers (in normal orders of magnitude) does not have a negative impact on cluster utilization for common PDF file sizes.
 
-[IMAGE]
+![Network delay result](https://github.com/ag-gipp/acst/blob/main/graphics/delay_restric.png?raw=true)
 
 Limitation in CPU and RAM
 Limiting the CPU (down to 0.1 CPUs, which corresponds to about 2 GFLOPS) did not lead to any measurable difference and was therefore not changed further in the network tests.
