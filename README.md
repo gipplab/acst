@@ -475,6 +475,8 @@ In the future, based on the results, a cluster can be set up in the real world a
 
 ### API and library references
 
+go-ipfs by Steven Allen, Protocol Labs : https://github.com/ipfs/go-ipfs
+
 ipfs-http-api by Protocol Labs, Inc.: https://github.com/ipfs/http-api-docs 
 
 js-ipfs by Alex Potsides et. al.: https://github.com/ipfs/js-ipfs 
