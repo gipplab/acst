@@ -188,7 +188,7 @@ To use our IPFS peers in private mode, we need to change the bootstrap addresses
 
 Initialize IPFS and remove standard BSN on PA & PB:
 
-    ipfs init 
+    ipfs init
     ipfs bootstrap rm --all
     ipfs config show
 
