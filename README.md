@@ -399,15 +399,15 @@ When data has been added to the cluster, the data exchange can be inspected with
 
 ![Overview of wireshark](https://github.com/ag-gipp/acst/blob/main/graphics/Wireshark_ov.png?raw=true)
 
-and select docker (docker0) to see all containers. 
-Then you can filter for a specific container (e.g. the one that executes a "get"). To get only IPFS relevant, it can be advantageous to filter by port 4001 and IP (example):
+and select docker (docker0) to see the traffic of all containers. 
+Then you can filter for a specific container (e.g. the one that executes a "get"). To show only IPFS relevant packages, it can be advantageous to filter by port 4001 and the IP of one container (example):
 
     ip.addr == 172.17.0.2 && tcp.port eq 4001
 
 
 ![Data of wireshark](https://github.com/ag-gipp/acst/blob/main/graphics/wireshark_data.png?raw=true)
 
-Now you can filter even further or sort e.g. by length of the packages. At the bottom right you can also read the number of packages displayed.
+Now you can filter even further or sort e.g. by length of the packages. At the bottom right you can also see the number of packages displayed.
 
 
 ### Results
@@ -420,18 +420,16 @@ For a well running system it is therefore advantageous to connect all peers with
 
 ![Network speed restriction result](https://github.com/ag-gipp/acst/blob/main/graphics/speed_restric.png?raw=true)
 
-Different tests show that using varying delays in the connection to simulate a slow response time has no effect on the peers used for data provisioning. Thus, the *peer with a high simulated ping was selected to provide data in a ***similar way*** as a peer with a low response time*. Measured were orders of magnitude 10 to 50 ms and 10 to 2000 ms. In the **extreme test**, on average, the peer with 10 ms delay was used for 7% of the packets, the one with 100 ms delay for 48%, the one with 1 s delay for 12.5% and the one with 2 s delay for 32.5%. Above this, a response time is unrealistic in today's world. 
+Different tests show that using varying delays in the connection to simulate a slow response time has no effect on the peers used for data provisioning. Thus, the *peer with a high simulated ping was selected to provide data in a ***similar way*** as a peer with a low response time*. Measured were orders of magnitude 10 to 50 ms and 10 to 2000 ms. In the **extreme test**, on average, the peer with 10 ms delay was used for 7% of the packets, the one with 100 ms delay for 48%, the one with 1 s delay for 12.5% and the one with 2 s delay for 32.5%. Above one second, a response time is unrealistic in today's world. 
 In a more **realistic test**, the peer with 10 ms delay was used for 25%, the peer with 20 ms delay was used for 30%, the peer with 30 ms delay was used for 20%, and the peer with the largest delay in the test (50 ms) was used for 23% of the packets. 
-In all tests the download speed was not very much affected by the delay (as seen in Figure 6).
+In all tests the download speed was not very much affected by the delay (as seen in the picture).
 The combined results of the eight runs show that the response time of the peers (in normal orders of magnitude) does not have a negative impact on cluster utilization for common PDF file sizes.
 
 ![Network delay result](https://github.com/ag-gipp/acst/blob/main/graphics/delay_restric.png?raw=true)
 
 Limitation in CPU and RAM
-Limiting the CPU (down to 0.1 CPUs, which corresponds to about 2 GFLOPS) did not lead to any measurable difference and was therefore not changed further in the network tests.
+Limiting the CPU (down to 0.1 CPUs) did not lead to any measurable difference and was therefore not changed further in the network tests.
 However, limiting the available RAM has an impact on the system. For example, a container with a PDF requires about 200 MB of memory. Since Docker stores most of the memory in the main memory during execution, bottlenecks can quickly occur here with large files. This is not to be expected in real systems for this moment.
-Overall
-In all tests, peer 0 was the bootstrap node and thus had to work the most. The peers 1 to 4 were further restricted with increasing number. This can also be seen in Figure 8. Since peer 4 was not used in some tests, the participation of this peer is slightly different from the expected trend.
 
 
 ### Conclusion
