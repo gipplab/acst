@@ -400,7 +400,7 @@ On the other hand, it is still only a simulation since the whole system is based
 ### Wireshark
 When data has been added to the cluster, the data exchange can be inspected with Wireshark. To do this, start Wireshark:
 
-![Overview of wireshark]()
+![Overview of wireshark](https://github.com/ag-gipp/acst/blob/main/graphics/Wireshark_ov.png?raw=true)
 
 and select docker (docker0) to see all containers. 
 Then you can filter for a specific container (e.g. the one that executes a "get"). To get only IPFS relevant, it can be advantageous to filter only by port 4001 (example):
@@ -408,7 +408,7 @@ Then you can filter for a specific container (e.g. the one that executes a "get"
     ip.addr == 172.17.0.2 && tcp.port eq 4001
 
 
-![Data of wireshark]()
+![Data of wireshark](https://github.com/ag-gipp/acst/blob/main/graphics/wireshark_data.png?raw=true)
 
 Now you can filter even further or sort e.g. by length of the packages. At the bottom right you can also read the number of packages displayed.
 
