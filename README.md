@@ -9,7 +9,7 @@ Seminar Selected Topics in Data & Knowledge Engineering WS 2020/2021
 This project is about finding out the benefits and shortcomings of recent decentralized content addressable storage in the form of `IPFS` and if we can use it to store, retrieve and manage academic documents. For this purpose, data will made available inside a private cluster. Then other peers will try to read the data previously added.
 Instead of downloading the data from a specific server to my client, my peer asks other (nearby) peers for the information. In the same way, new data should not only be hosted by my peer, but also by others in the network, so the information should still be retrieved when my own peer is deactivated or lost the data.
 
-[Overview](https://raw.githubusercontent.com/ag-gipp/acst/main/graphics/HostDocker%2B.png?token=ARWRCB6IJDXOTPKDG6X24K3AL47NK)
+[Overview](https://github.com/ag-gipp/acst/blob/main/graphics/ov.png?raw=true)
 
 ## Motivation
 IPFS brings high availability while only requiring one comparatively lightweight peer on my side. With IPFS the data transport can be faster and therefore more energy-efficient than via the conventional server-client way, assuming the information requested is available on a geographically closer peer and replication is cheaper than routing.
