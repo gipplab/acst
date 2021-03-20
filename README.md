@@ -1,9 +1,6 @@
 #  Blockchain 1: Academic Storage Cluster
 Seminar Selected Topics in Data & Knowledge Engineering WS 2020/2021 
-***
-## ***🚧under construction🚧***
-### TODO
-* Add pictures
+
 ***
 ## Academic Storage Cluster
 This project is about finding out the benefits and shortcomings of recent decentralized content addressable storage in the form of `IPFS` and if we can use it to store, retrieve and manage academic documents. For this purpose, data will made available inside a private cluster. Then other peers will try to read the data previously added.
@@ -398,12 +395,12 @@ This method has some advantages and disadvantages. On one hand, slow networks ca
 On the other hand, it is still only a simulation since the whole system is based on just one real network with just one real computer.
 
 ### Wireshark
-When data has been added to the cluster, the data exchange can be inspected with Wireshark. To do this, start Wireshark:
+When data has been added to the cluster, the data exchange can be inspected with Wireshark. To do this, start Wireshark ...
 
 ![Overview of wireshark](https://github.com/ag-gipp/acst/blob/main/graphics/Wireshark_ov.png?raw=true)
 
 and select docker (docker0) to see all containers. 
-Then you can filter for a specific container (e.g. the one that executes a "get"). To get only IPFS relevant, it can be advantageous to filter only by port 4001 (example):
+Then you can filter for a specific container (e.g. the one that executes a "get"). To get only IPFS relevant, it can be advantageous to filter by port 4001 and IP (example):
 
     ip.addr == 172.17.0.2 && tcp.port eq 4001
 
