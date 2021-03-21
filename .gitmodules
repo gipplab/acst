@@ -1,3 +1,6 @@
 [submodule "ascEnv/neueDock/go-ipfs"]
 	path = ascEnv/neueDock/go-ipfs
 	url = https://github.com/ipfs/go-ipfs.git
+[submodule "ascEnv/webAppServer/go-ipfs"]
+	path = ascEnv/webAppServer/go-ipfs
+	url = https://github.com/ipfs/go-ipfs.git
