@@ -3,7 +3,7 @@ Seminar Selected Topics in Data & Knowledge Engineering WS 2020/2021
 
 ***
 ## Academic Storage Cluster
-This project is about finding out the benefits and shortcomings of recent decentralized content addressable storage in the form of `IPFS` and if we can use it to store, retrieve and manage academic documents. For this purpose, data will made available inside a private cluster. Then other peers will try to read the data previously added.
+This project is about finding out the benefits and shortcomings of recent decentralized content addressable storage in the form of `IPFS` and if we can use it to store, retrieve and manage academic documents. For this purpose, data made available inside a private cluster. Then other peers tried to read the data previously added.
 Instead of downloading the data from a specific server to my client, my peer asks other (nearby) peers for the information. In the same way, new data should not only be hosted by my peer, but also by others in the network, so the information should still be retrieved when my own peer is deactivated or lost the data.
 
 ![Overview](https://github.com/ag-gipp/acst/blob/main/graphics/ov.png?raw=true)
@@ -17,6 +17,7 @@ In this environment, some parameters of the Docker containers can be changed so 
 
     ./startEnv.sh
 
+A bootstap-node is generated, on which data can be uploaded at port 3000, and further IPFS nodes are created.
 ***
 
 ## Installation and Start
