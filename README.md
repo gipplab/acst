@@ -107,12 +107,12 @@ One approach can be to use many computers with their own hardware, which are con
 With Docker the host can run many instances of a lightweight OS with applications installed on the image. It is designed to be resource-efficient and installs only one instance of the required data for all containers.
 
 ### Setup
-Docker is offered for many operating systems, including MacOs, Windows and many Linux distributions at Docker Hub[5]. 
+Docker is offered for many operating systems, including MacOs, Windows and many Linux distributions at Docker Hub [5]. 
 After a few attempts, however, Windows should be avoided, since the Windows subsystem for Linux (WSL) offered by Microsoft [6] still has some bugs and most docker images require this, because they are based on Linux to keep them easy to run in multiple instances. 
-One big problem was very high memory usage, which was not detected by docker itself (see Memory usage of docker with Linux-based containers under Windows 10), restricting the memory was also not fruitful. There are also general difficulties in compiling and running programs due to the non-existence of some data or functions in the WSL. Since than Ubuntu 20.04.1 [7] was used as the base operating system. 
+One big problem was very high memory usage, which was not detected by docker itself, restricting the memory was also not fruitful. There are also general difficulties in compiling and running programs due to the non-existence of some data or programs in the WSL. Since than Ubuntu 20.04.1 [7] was used as the base operating system. 
 
 ### Container 
-An image for running IPFS is already provided in the Docker Hub [8]. This is very small (in terms of memory requirements), but is very cumbersome to use, as there is no package manager or similar in the busybox by default. Therefore, a i created a separate Dockerfile, which is based on alpine and thus supports the apk packet manager.
+An image for running IPFS is already provided in the Docker Hub [8]. This is very small (in terms of memory requirements), but is very cumbersome to use, as there is no package manager or similar in the busybox by default. Therefore, a separate Dockerfile was created, which is based on alpine and thus supports the apk packet manager to get programs installed.
 
 ### Dockerfile
 As described earlier, Alpine is used as the base:
@@ -129,7 +129,7 @@ Now IPFS is copied from the Dockerfile folder to the container (or downloaded fr
 
     COPY go-ipfs /go-ipfs	
 
-Finally IPFS can be compiled and "installed" with make and go:
+Finally IPFS can be compiled and installed with make and go:
 
     WORKDIR /go-ipfs
     RUN make -j 16 install
@@ -139,7 +139,7 @@ Finally IPFS can be compiled and "installed" with make and go:
 Now IPFS is installed and can be used.
 
 
-## Inter Planetary File System (theoretical part)
+## Inter Planetary File System
 
 ### Overview / how it works
 To understand, what makes IPFS special, we first need to know the “conventional” way of file systems in the web. **HTTP** at this time is the most successful “distributed system of files” and will be used by all of us many times per day, for example for reading news, streaming video or learning at home. If your client wants any data, it needs to know where it is located. Then we get the information from a domain like “www.mywebsite.tld/important/somedata.html”. So, the data should be stored at this location, but since we just specify the data by its location, it is not guaranteed to be the exact data we want. The server could serve a different file with the same name at the location or provide a different version. If just one server is deactivated, the data is not available for the downtime.
@@ -149,16 +149,18 @@ Let us look at the following scenario:
 
 >> Alice is a student downloading a paper for her bachelor thesis. Since many are homeschooling and the university server is busy, she can only download the data very slowly.
 >    
-> > Bob, on the other hand, has the file on his computer and is an active IPFS peer. Alice remembers a lecture in which IPFS was introduced and activates her client out of boredom because the download from the university is still not finished. She simply asks the network for the file and gets the required paper directly from Bob.
+> > Bob, on the other hand, has the file on his computer and is an active IPFS peer.
+> >
+> > Alice remembers a lecture in which IPFS was introduced and activates her client out of boredom because the download from the university is still not finished. She simply asks the network for the file and gets the required paper directly from Bob.
 > 
-> So the data is not only hosted by one peer, but by others in the network, so the information should still be retrieved when a peer is not available or lost the data, but this only works, if the data is relevant enough or if it is been pinned by an active peer.
+> So the data is not only hosted by one server, but by others in the network, so the information should still be retrieved when a peer is not available or lost the data, but this only works, if the data is relevant enough or if it is been pinned by an active peer.
 
 
 As we saw in the scenario, *IPFS does not address the data according to the location of the data, but according to the content of the data itself (content-addressing)* [1]. For this, however, a unique fingerprint, also called a **cryptographic hash**, must be created for each file. This allows the data to be uniquely described and verified. So, another benefit is that there is **no need to trust** other peers. 
-Furthermore, **duplicates can be avoided** by cleverly dividing the files into chunks and using intelligent data structures (**Merkle DAG**)[2], thus saving on storage space. Each node can store only the data it considers important and additionally a table (**distributes hash table**), in which the peers that hold other data are stored [1]. 
+Furthermore, **duplicates can be avoided** by cleverly dividing the files into chunks and using intelligent data structures like the **Merkle DAG** [2] used by IPFS, thus saving on storage space. Each node can store only the data it considers important and additionally a table (**distributes hash table**), in which the peers that hold other data are stored [1]. 
 
 ### Installation & Setup
-To provide or view data in the IPFS the IPFS-client is needed on the computer. Installers for MacOs, Windows and some Linux distributions as well as binaries in repositories like GitHub [3] are available. They are also accessible through package managers like brew and choco.
+To provide or view data inside the IPFS network, the IPFS-client is needed on the computer. Installers for MacOs, Windows and some Linux distributions as well as binaries in repositories like GitHub [3] are available. They are also accessible through package managers like brew and choco.
 After the installation IPFS must be *initialized* to function and the computer gets a **peer ID**:
 
     ipfs init
@@ -202,14 +204,14 @@ Enable the private network on PA & PB:
     ipfs daemon &
 
 Testing:
-PA/PB:
+PA:
 
     mkdir ipfstest
     cd ipfstest
     echo "Test" > file1
     ipfs add file1
 
-PB/PA:
+PB:
 
     ipfs cat <hash>
 
