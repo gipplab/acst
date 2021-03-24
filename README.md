@@ -239,8 +239,8 @@ In this scenario we want the data to be distributed only on some of our peers, s
 The service of this prototype uses the ipfs-http-client API/library, which was developed by Alan Shaw et. al.
 ### IPFS WEB APP UPLOAD
 
-A tool to easily "upload" files to IPFS
-
+A tool to easily "upload" files to IPFS.
+If you use the webapp form the bootstrapnode, you can go directly to Upload. This node already runs the node server.
 
 #### Setup
 
@@ -278,9 +278,11 @@ After a successful upload you can read the file with
 ### Backend
 Since no real server is used here, node and npm must be installed on the container responsible for the backend of the WebApp.	
 The actual app uses the ipfs-http-client [9] and the API interface of the IPFS client, which must run in the background. In addition, express [10] and express-fileupload [11] are used as the web framework and for uploading data.
-Functions
+
+#### Functions
 First, the IPFS-client is given the API address, which must be known beforehand. 
-ipfs daemon
+
+    ipfs daemon
 
 The client returns much information including the IPFS API address (typically localhost on port 5001). This needs to be the same as in app.js:
 
@@ -387,7 +389,7 @@ All docker containers can be examined in wireshark by filtering the IP address. 
 ### Methodology
 In order to find out whether IPFS and cluster are usable for the purposes of the academic storage cluster, effects on the system are measured using the previously mentioned tools. As is common for a storage system for academic data, a PDF file is taken as a reference for academic files. The size of our test file is 6.93 MB. 
 
-This file is first made available by a peer in IPFS (ipfs add test.pdf). Then, this file is pinned throughout the cluster (ipfs-cluster-ctl pin add <hash>). The pinning status is then monitored and only proceeded when on all cluster peers it has been replicated. Then on a specific peer (which however changes) the file is deleted and then also the inexistence of the file is confirmed. 
+This file is first made available by a peer in IPFS (`ipfs add test.pdf`). Then, this file is pinned throughout the cluster (`ipfs-cluster-ctl pin add <hash>`). The pinning status is then monitored and only proceeded when on all cluster peers it has been replicated. Then on a specific peer (which changes through the runs) the file is deleted and then also the inexistence of the file is confirmed. 
 
 Finally, an ipfs get is executed from the peer where the file was deleted.
 
