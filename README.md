@@ -416,7 +416,7 @@ Now you can filter even further or sort e.g. by length of the packages. At the b
 
 
 ### Results
-By analyzing the data from `wireshark`, it can be observed that in fact the data for the one file is obtained from multiple peers. 
+By analyzing the data from *wireshark*, it can be observed that in fact the data for the one file is obtained from multiple peers. 
 Bandwidth limitation 
 IPFS works up from a bandwidth of about **100 Kbps** below that, it becomes difficult to communicate with the network. The *more bandwidth available to a peer, the more likely that peer is to provide data* in priority to the others. This results in a larger number of large packets at the end of the download. 
 From a bandwidth of about **1000 KBit/s on, this effect is no longer noticeable**, since the proportion of packets from fast (10000 KBit/s) and slow (1000 KBit/s) peers is about the same.
