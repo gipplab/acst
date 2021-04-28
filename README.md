@@ -436,6 +436,82 @@ Limitation in CPU and RAM
 Limiting the CPU (down to 0.1 CPUs) did not lead to any measurable difference and was therefore not changed further in the network tests.
 However, limiting the available RAM has an impact on the system. For example, a container with a PDF requires about 200 MB of memory. Since Docker stores most of the memory in the main memory during execution, bottlenecks can quickly occur here with large files. This is not to be expected in real systems for this moment.
 
+|  Number  | BSN | GET @ |   CPU   | Memory |  DLRestr | Delay | Time | Particip. |
+|:--------:|:---:|:-----:|:-------:|:------:|:--------:|:-----:|:----:|:---------:|
+| Run.Node |     |       | [count] |  [MB]  | [kbit/s] |  [ms] |  [s] |    [%]    |
+|      1.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |    3 |         0 |
+|      1.1 |     |       |       1 |   1000 |     1000 |     1 |    3 |       100 |
+|      1.2 |     |       |       1 |   1000 |     1000 |     1 |    3 |         0 |
+|      1.3 |     |   x   |       1 |   1000 |     1000 |     1 |    3 |         0 |
+|      2.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |    7 |       100 |
+|      2.1 |     |       |       1 |   1000 |     1000 |     1 |    7 |         0 |
+|      2.2 |     |       |       1 |   1000 |     1000 |     1 |    7 |         0 |
+|      2.3 |     |   x   |       1 |   1000 |     1000 |     1 |    7 |         0 |
+|      3.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |   <1 |       100 |
+|      3.1 |     |       |       1 |   1000 |     1000 |     1 |   <1 |         0 |
+|      3.2 |     |       |       1 |   1000 |     1000 |     1 |   <1 |         0 |
+|      3.3 |     |   x   |       1 |   1000 |     1000 |     1 |   <1 |         0 |
+|      4.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |   34 |         0 |
+|      4.1 |     |       |       1 |   1000 |     1000 |     1 |   34 |       100 |
+|      4.2 |     |       |       1 |   1000 |     1000 |     1 |   34 |         0 |
+|      4.3 |     |   x   |       1 |   1000 |     1000 |     1 |   34 |         0 |
+|      5.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |   41 |         0 |
+|      5.1 |     |       |       1 |   1000 |     1000 |     1 |   41 |        50 |
+|      5.2 |     |       |       1 |   1000 |     1000 |     1 |   41 |        50 |
+|      5.3 |     |   x   |       1 |   1000 |     1000 |     1 |   41 |         0 |
+|      6.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |   -1 |         0 |
+|      6.1 |     |       |       1 |   1000 |      100 |   100 |   -1 |         0 |
+|      6.2 |     |       |       1 |   1000 |      100 |   100 |   -1 |         0 |
+|      6.3 |     |   x   |       1 |   1000 |      100 |   100 |   -1 |         0 |
+|      6.4 |     |       |       1 |   1000 |     1000 |     1 |   -1 |         0 |
+|      7.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |   -1 |         0 |
+|      7.1 |     |       |       1 |   1000 |      200 |    50 |   -1 |         0 |
+|      7.2 |     |       |       1 |   1000 |      200 |    50 |   -1 |         0 |
+|      7.3 |     |   x   |       1 |   1000 |      500 |    20 |   -1 |         0 |
+|      7.4 |     |       |       1 |   1000 |     1000 |     1 |   -1 |         0 |
+|      8.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |    6 |       100 |
+|      8.1 |     |       |       1 |   1000 |     1000 |    50 |    6 |         0 |
+|      8.2 |     |       |       1 |   1000 |     1000 |    50 |    6 |         0 |
+|      8.3 |     |   x   |       1 |   1000 |     1000 |    20 |    6 |         0 |
+|      8.4 |     |       |       1 |   1000 |     1000 |    10 |    6 |         0 |
+|      9.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |   25 |         0 |
+|      9.1 |     |       |       1 |   1000 |     1000 |    50 |   25 |        47 |
+|      9.2 |     |       |       1 |   1000 |     1000 |    50 |   25 |        48 |
+|      9.3 |     |   x   |       1 |   1000 |     1000 |    20 |   25 |         0 |
+|      9.4 |     |       |       1 |   1000 |     1000 |    10 |   25 |         5 |
+|     10.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |   36 |         0 |
+|     10.1 |     |       |       1 |   1000 |     1000 |    50 |   36 |        33 |
+|     10.2 |     |       |       1 |   1000 |     1000 |    50 |   36 |        33 |
+|     10.3 |     |   x   |       1 |   1000 |     1000 |    20 |   36 |         0 |
+|     10.4 |     |       |       1 |   1000 |     1000 |    10 |   36 |        33 |
+|     11.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |    1 |         0 |
+|     11.1 |     |       |       1 |   1000 |     1000 |    50 |    1 |       100 |
+|     11.2 |     |       |       1 |   1000 |     1000 |    50 |    1 |         0 |
+|     11.3 |     |   x   |       1 |   1000 |     1000 |    20 |    1 |         0 |
+|     11.4 |     |       |       1 |   1000 |     1000 |    10 |    1 |         0 |
+|     12.0 |  x  |       |      -1 |     -1 |       -1 |    -1 |   74 |         0 |
+|     12.1 |     |       |       1 |   1000 |     1000 |    50 |   74 |         0 |
+|     12.2 |     |       |       1 |   1000 |     1000 |    50 |   74 |        65 |
+|     12.3 |     |   x   |       1 |   1000 |     1000 |    20 |   74 |         0 |
+|     12.4 |     |       |       1 |   1000 |     1000 |    10 |   74 |        35 |
+|     13.0 |  x  |       |      -1 |        |          |       |      |           |
+|     13.1 |     |       |       1 |        |          |       |      |           |
+|     13.2 |     |       |       1 |        |          |       |      |           |
+|     13.3 |     |   x   |       1 |        |          |       |      |           |
+|     13.4 |     |       |       1 |        |          |       |      |           |
+|     14.0 |  x  |       |      -1 |        |          |       |      |           |
+|     14.1 |     |       |       1 |        |          |       |      |           |
+|     14.2 |     |       |       1 |        |          |       |      |           |
+|     14.3 |     |   x   |       1 |        |          |       |      |           |
+|     14.4 |     |       |       1 |        |          |       |      |           |
+|     15.0 |  x  |       |      -1 |        |          |       |      |           |
+|     15.1 |     |       |       1 |        |          |       |      |           |
+|     15.2 |     |       |       1 |        |          |       |      |           |
+|     15.3 |     |   x   |       1 |        |          |       |      |           |
+|     15.4 |     |       |       1 |        |          |       |      |           |
+|     16.0 |  x  |       |      -1 |        |          |       |      |           |
+|     16.1 |     |       |       1 |        |          |       |      |           |
+
 
 ### Conclusion
 Working with IPFS and therefore a peer-to-peer network was interesting and relatively easy to setup. With just a few minutes of work, you can be part of a very powerful network for sharing data. However, there is much more to discover at IPFS than initially expected. The possibilities with a cluster for example are much greater than with a conventional server-client system, because the peers in the cluster can help each other out.
