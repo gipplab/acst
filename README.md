@@ -436,6 +436,24 @@ Limitation in CPU and RAM
 Limiting the CPU (down to 0.1 CPUs) did not lead to any measurable difference and was therefore not changed further in the network tests.
 However, limiting the available RAM has an impact on the system. For example, a container with a PDF requires about 200 MB of memory. Since Docker stores most of the memory in the main memory during execution, bottlenecks can quickly occur here with large files. This is not to be expected in real systems for this moment.
 
+
+### Conclusion
+Working with IPFS and therefore a peer-to-peer network was interesting and relatively easy to setup. With just a few minutes of work, you can be part of a very powerful network for sharing data. However, there is much more to discover at IPFS than initially expected. The possibilities with a cluster for example are much greater than with a conventional server-client system, because the peers in the cluster can help each other out.
+The real problem of the work is not IPFS itself, but the environment in which IPFS, or the cluster, operates. Thus, a changeable environment was created with as few uncertainties as possible to obtain consistent measurement data. 
+For this purpose, docker was used. A program that can run many instances of IPFS in a very resource-efficient way but is not very intuitive to use with Dockerfiles and thus needs to be used with a unique language to manage the actual images and installation. Especially the possibilities through choosing one of many different base images can consume a lot of time. For example, package managers do not provide the same programs in every version and can only be updated a little. So choosing the right base image was very important but time consuming.
+Therefore, many scripts were developed with which it is possible to start docker, the container for the server with IPFS peer and the additional IPFS peer, which together form a mini cluster, by just executing one line of command. Also all changeable parameters will be set while the script is running. This saves much time searching for the right image and manipulating the system after every restart of the system.
+
+As expected, the bandwidth limitation had a negative impact on download speed, and the CPU limitation had very little to no impact, as IPFS works relatively light weight. In contrast, it was surprising to see that the simulated long response time had little effect on the choice of peers to provide. 
+
+
+In the future, based on the results, a cluster can be set up in the real world at physically different locations and connected to each other. In this way, it can be tested whether the new results match those from the simulated environment. In addition, multiple files can be used to investigate the impact of replication on storage space.
+
+
+## Appendix
+
+### Table with measurement data
+(-1) represents no restrictions or changes
+
 |  Number  | BSN | GET @ |   CPU   | Memory |  DLRestr | Delay | Time | Particip. |
 |:--------:|:---:|:-----:|:-------:|:------:|:--------:|:-----:|:----:|:---------:|
 | Run.Node |     |       | [count] |  [MB]  | [kbit/s] |  [ms] |  [s] |    [%]    |
@@ -586,18 +604,6 @@ However, limiting the available RAM has an impact on the system. For example, a 
 |     31.2 |     |       |       1 |   1000 |     1000 |    20 |   18 |        49 |
 |     31.3 |     |       |       1 |   1000 |     1000 |    30 |   18 |        15 |
 |     31.4 |     |   x   |       1 |   1000 |     1000 |    50 |   18 |         0 |
-
-
-### Conclusion
-Working with IPFS and therefore a peer-to-peer network was interesting and relatively easy to setup. With just a few minutes of work, you can be part of a very powerful network for sharing data. However, there is much more to discover at IPFS than initially expected. The possibilities with a cluster for example are much greater than with a conventional server-client system, because the peers in the cluster can help each other out.
-The real problem of the work is not IPFS itself, but the environment in which IPFS, or the cluster, operates. Thus, a changeable environment was created with as few uncertainties as possible to obtain consistent measurement data. 
-For this purpose, docker was used. A program that can run many instances of IPFS in a very resource-efficient way but is not very intuitive to use with Dockerfiles and thus needs to be used with a unique language to manage the actual images and installation. Especially the possibilities through choosing one of many different base images can consume a lot of time. For example, package managers do not provide the same programs in every version and can only be updated a little. So choosing the right base image was very important but time consuming.
-Therefore, many scripts were developed with which it is possible to start docker, the container for the server with IPFS peer and the additional IPFS peer, which together form a mini cluster, by just executing one line of command. Also all changeable parameters will be set while the script is running. This saves much time searching for the right image and manipulating the system after every restart of the system.
-
-As expected, the bandwidth limitation had a negative impact on download speed, and the CPU limitation had very little to no impact, as IPFS works relatively light weight. In contrast, it was surprising to see that the simulated long response time had little effect on the choice of peers to provide. 
-
-
-In the future, based on the results, a cluster can be set up in the real world at physically different locations and connected to each other. In this way, it can be tested whether the new results match those from the simulated environment. In addition, multiple files can be used to investigate the impact of replication on storage space.
 
 ***
 
