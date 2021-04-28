@@ -2,6 +2,43 @@
 Seminar Selected Topics in Data & Knowledge Engineering WS 2020/2021 
 
 ***
+## Table of contents
+
+- [Academic Storage Cluster](#academic-storage-cluster)
+- [Motivation](#motivation)
+- [Features](#features)
+- [Installation and Start](#installation-and-start)
+    - [Setup](#0-setup)
+        - [Clone repository](#1-clone-repository)
+        - [Build images](#2-build-images)
+    - [Start](#1-start)
+- [Docker](#docker)
+    - [Intro](#intro)
+    - [Setup](#setup)
+    - [Container](#container)
+    - [Dockerfile](#dockerfile)
+- [Inter Planetary File System](#inter-planetary-file-system)
+    - [Overview](#overview--how-it-works)
+    - [Installation & Setup](#installation--setup)
+    - [Interacting with Clients](#interacting-with-clients)
+    - [Bootstrap node](#bootstrap-node)
+- [Cluster](#cluster)
+    - [Private Cluster](#private-cluster)
+- [WebApp](#webapp)
+- [Network restrictions](#network-restrictions)
+- [Measurement and Manipulation of Cluster](#measurement-and-manipulation-of-cluster)
+- [Evaluation](#evaluation)
+    - [Methodology](#methodology)
+    - [Wireshark](#wireshark)
+    - [Results](#results)
+    - [Conclusion](#conclusion)
+- [Appendix](#appendix)
+    - [Table with measurement data](#table-with-measurement-data)
+- [Sources and references](#sources-and-references)
+    - [General resources](#general-resources)
+    - [API and library references](#api-and-library-references)
+- [License](#license)
+***
 ## Academic Storage Cluster
 This project is about finding out the benefits and shortcomings of recent decentralized content addressable storage in the form of `IPFS` and if we can use it to store, retrieve and manage academic documents. For this purpose, data made available inside a private cluster. Then other peers tried to read the data previously added.
 Instead of downloading the data from a specific server to my client, my peer asks other (nearby) peers for the information. In the same way, new data should not only be hosted by my peer, but also by others in the network, so the information should still be retrieved when my own peer is deactivated or lost the data.
